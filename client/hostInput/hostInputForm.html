@@ -7,23 +7,10 @@
         <div class="col s12 m6 l4">
             <input type="checkbox" class="emailIfDown" id="emailIfDown" />
             <label class="label-inline" for="emailIfDown">Email if Down?</label>
-            <br />
-            <input type="checkbox" class="nmapScan" id="nmapScan" />
-            <label class="label-inline" for="nmapScan">Deeper Scan Weekly?</label>
         </div>
         <div class="input-field col s12 m12 l4">
             <label for="emailAddress">Email Address</label>
             <input type="email" class="emailAddress" id="emailAddress" value="{{#if $eq inputMode "edit"}}{{emailAddress}}{{/if}}" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <p class="flow-text">
-                The Host Up tool also offers the ability to run a deeper scan on your chosen server.  We use the nmap tool for this scan, and run it once weekly for you if you choose to run it.  Statistics and other information are collected, and can be seen in a historical view when desired.
-            </p>
-            <p class="flow-text">
-                Check the 'Deeper Scan Weekly?' box above if you'd like to also have this deeper scan run on your site.  You can remove this option at any time by editing this entry from your Host List view if so desired.
-            </p>
         </div>
     </div>
     <div class="row">
