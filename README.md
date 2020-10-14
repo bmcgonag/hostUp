@@ -19,6 +19,7 @@ Host Up
   * [Production Mode - Run It Forever](#prod-mode-forever)
   * [Production Mode - Build](#prod-mode-build)
     * [Production Mode - Set Some Environmental Variables](#env-vars)
+* [Install with Docker](#install-with-docker)
 * [To Do Still](#to-do-still)
 * [Contribute](#contribute)
 * [License](#license)
@@ -287,6 +288,57 @@ In my setup the file forever.log is located in /home/<my user>/.forever
 When you hit enter, it should start.  Now you can close the terminal window and still get to your web application.
 
 Enjoy!
+
+<a id="install-with-docker" name="install-with-docker></a>
+## Install with Docker
+You can use the Docker Image from https://hub.docker.com/repository/docker/bmcgonag/hostup
+
+I suggest using Docker Compose for this, as it needs a MongoDB installation to run as well, so you can run MongoDB in a separate container, and keep it all nice and clean. 
+
+### Setup for Docker Compose
+1. Install Docker and Docker Compose.
+2. Create a new Directory for this install.
+
+`mkdir hostup`
+
+3. Move into the directory.
+
+`cd hostup`
+
+4. Create a docker-compose.yml file.
+
+`nano docker-compose.yml`
+
+5.  Copy the following into the file:
+
+```
+version: '3.0'
+
+services:
+  hostup:
+    container_name: hostup
+    image: bmcgonag/hostup:1.0
+    restart: always
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+  mongo:
+    container_name: hostup_mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+```
+
+Adjust the ports as needed in the compose file above, then save the file.
+
+6. Run the docker-compose.yml file with
+
+`docker-compose up -d`
+
+After the system is up, reach it through "http://localhost:3000", or "http://<ip of server>:3000" unless you changed the port mapping (in which case use your port).
 
 <a id="to-do-still" name="to-do-still"></a>
 ## To Do Still
