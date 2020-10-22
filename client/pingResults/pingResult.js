@@ -27,10 +27,16 @@ Template.pingResult.onRendered(function () {
         tooltip: {
             headerFormat: '<span style="font-size:10px">Date / Ping Time</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0;font-size:11px;">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y} ms</b></td></tr>',
+            '<td style="padding:0"><b>{point.x}, {point.y} ms</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
+        },
+        xAxis: {
+          type: 'string',
+          crosshair: {
+            snap: true
+          }
         },
         yAxis: {
             title: {

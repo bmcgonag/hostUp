@@ -116,7 +116,7 @@ callHostURL = function(myURL, urlId, nextCheck, timeToRun, nmapScan, nmapScanRec
 
           // ****    now we'll call our email function to send the user an email
           Meteor.call('emailResults', status, color, myURL, urlId);
-          repeatChecks(timeToRun);
+          repeatChecks(timeToRun, false);
         }
       });
     } else {
@@ -214,6 +214,7 @@ callHostURL = function(myURL, urlId, nextCheck, timeToRun, nmapScan, nmapScanRec
         } else {
           // console.log("--- *** --- Active Entry should have been made for " + myURL);
           // console.log(" ");
+          repeatChecks(timeToRun, false);
         }
       }); 
 
@@ -238,6 +239,7 @@ callHostURL = function(myURL, urlId, nextCheck, timeToRun, nmapScan, nmapScanRec
 // *******************************************************************************************
 
 checkURLsRepeat = function(serverStarted) {
+  console.log("    ----    Inside checkURLsRepeat functioin - serverStarted = " + serverStarted);
   //
   // ****    this is code we run when the server starts. We have to do this so that the timer
   // ****    based checks start even if no one views the website for a while.
@@ -272,7 +274,7 @@ checkURLsRepeat = function(serverStarted) {
 //              Run the Checks
 // **********************************************
 runTheChecks = function(timeToRun) {
-
+  console.log("    ----    Inside runTheChecks function - timeToRun = " + timeToRun);
   let status = "";
   let checkURLs = URLToCheck.find({}).fetch();
 
@@ -283,24 +285,12 @@ runTheChecks = function(timeToRun) {
     for (let i = 0; i < numUrlsToCheck; i++) {
       let urlId = checkURLs[i]._id;
       let myURL = checkURLs[i].url;
-      let nmapScan = checkURLs[i].nmapScan;
       let now = new Date();
       let nowFormatted = moment(now).format('YYYY-MM-DD HH:mm:ss');
       let nowCompare = moment(nowFormatted).toISOString();
 
-      if (nmapScan == true) {
-        var nmapRecheck = checkURLs[i].nmapScanRecheck;
-        if (typeof nmapRecheck == 'undefined' || nmapRecheck == null || nmapRecheck == "") {
-          console.log("I thought nmapScanRecheck was undefined.");
-          nmapRecheck = nowCompare;
-        }
-      } else {
-        console.log("nmapScanRecheck should be showing as an ISO String and is defined.");
-        nmapRecheck = moment(checkURLs[i].nmapScanRecheck).toISOString();
-      }
-
       // console.log("****    ------------------------------------------      ****");
-      // console.log("****    Checking URL: " + myURL);
+      console.log("    ****    Checking URL: " + myURL);
 
       let currStatus = HostStatus.findOne({ urlId: urlId }, { sort: { runOn: -1 } });
 
@@ -310,51 +300,9 @@ runTheChecks = function(timeToRun) {
       // **** check the ping of the URL
       pingURL(now, nowFormatted, timeToRun, myURL, urlId);
 
-      // **** check nmap if so desired
-      if (nmapScan == true) {
-        // **** now we check to see if it's time to run this scan.
-        if (nowCompare > nmapRecheck) {
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("****    Now was greater than previous check date.    ****");
-          // console.log("");
-          // console.log("");
-          // console.log("****    Previous date is: " + nmapRecheck);
-          // console.log("");
-          // console.log("");
-          // console.log("****    and now is: " + nowCompare);
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          // console.log("");
-          if (i == 0) {
-            Meteor.call("nmap.deletePrevious", function(err, result) {
-              if (err) {
-                console.log("    ****    error deleting nmap data: " + err);
-              } else {
-                console.log("    ****    nmap data removed successfully!");
-              }
-            });
-          }
-
-          runNmapScan(urlId, myURL, nmapRecheck);
-        }
-      }
-
       // **** now set a timer to recheck things.
       if (i < (numUrlsToCheck-1)) {
-        // console.log("****    Line 288:    Called it for the " + i + " time.");
+        // console.log("****    Line 303:    Called it for the " + i + " time.");
         if (i == 0) {
           timerSet = false;
         } else {
@@ -368,7 +316,7 @@ runTheChecks = function(timeToRun) {
     // **** you can uncomment this comment (or any for that matter) to get some logging
     // ****if you aren't getting what you expect.
     //
-    // console.log("Didn't find any URLs to Check at this time.");
+    console.log("Didn't find any URLs to Check at this time.");
   }
 }
 
@@ -383,6 +331,7 @@ runTheChecks = function(timeToRun) {
 // *******************************************************************************************
 
 repeatChecks = function(timeToRun, timerSet) {
+  console.log("    ---- Inside repeatChecks functio - timeToRun, timerSet = " + timeToRun + ", " + timerSet);
   if (timeToRun == "" || timeToRun == null || typeof timeToRun == 'undefined') {
     let defaultTime = 20;
     timeRun = defaultTime * 1000 * 60;
@@ -393,10 +342,14 @@ repeatChecks = function(timeToRun, timerSet) {
   if (timerSet == false) {
     timerSet = true;
 
+    console.log("");
+    console.log("    ----    About to set timeout.");
+    console.log("");
     Meteor.setTimeout(function() {
-      checkURLsRepeat(false, false);
+      checkURLsRepeat(true);
     }, timeRun);
   } else {
+    console.log("timer already showed to be set.");
     timerSet = true;
   }
 }
@@ -410,7 +363,7 @@ repeatChecks = function(timeToRun, timerSet) {
 // *******************************************************************************************
 
 performURLCheck = function(now, nowFormatted, freq, myURL, urlId) {
-
+  console.log("    ----    Inside peerformURLChecks function.");
   let config = ConfigColl.findOne({});
 
   if (typeof config == 'undefined' || config == null || config == "") {
@@ -437,7 +390,7 @@ performURLCheck = function(now, nowFormatted, freq, myURL, urlId) {
 // **************************************************************************************************
 
 pingURL = function(now, nowFormatted, timeToRun, url, urlId) {
-
+  console.log("    ----    Inside pingURL function.");
   //
   // **** I have to do some fun stuff here.  We get the full URL then split off the
   // **** part before the fqdn, so https://google.com becomes google.com
@@ -500,33 +453,5 @@ pingURL = function(now, nowFormatted, timeToRun, url, urlId) {
         });
       }
     }
-  }));
-}
-
-runNmapScan = function(urlId, url, nmapRecheck, nmapScanRecheck) {
-  let splitUrl = url.split('//');
-
-  let nmapScanExec = shelljs.exec("nmap -A -oX - " + splitUrl[1], { async: true }, function(stdout, code, err) {
-    if (err) {
-      console.log("Error on ShellJS call for nmap: " + err);
-    } else {
-      // console.log("Exit Code for nmap: " + code);
-    }
-  });
-
-  nmapScanExec.stdout.on('data', Meteor.bindEnvironment(function(data) {
-    Meteor.call('nmap.add', urlId, url, data, function(err, result) {
-      if (err) {
-        console.log("Error runnong nmap command: " + err);
-      } else {
-        Meteor.call('urlHost.updateNmap', urlId, function(err, result) {
-          if (err) {
-            console.log("Error adding recheck date / time to url host: " + err);
-          } else {
-            console.log("Successfully updated nmap recheck date / time.");
-          }
-        });
-      }
-    });
   }));
 }

@@ -4,9 +4,13 @@
             <label for="urlToCheck">URL To Check (https://yourdomain.org)</label>
             <input type="text" class="urlToCheck" id="urlToCheck" value="{{#if $eq inputMode "edit"}}{{editUrl}}{{/if}}" />
         </div>
-        <div class="col s12 m6 l4">
-            <input type="checkbox" class="emailIfDown" id="emailIfDown" />
-            <label class="label-inline" for="emailIfDown">Email if Down?</label>
+        <div class="input-field col s12 m6 l4">
+            <p>
+                <label>
+                  <input type="checkbox" class="emailIfDown" id="emailIfDown" />
+                  <span>Email if Down?</span>
+                </label>
+            </p>
         </div>
         <div class="input-field col s12 m12 l4">
             <label for="emailAddress">Email Address</label>
@@ -15,7 +19,7 @@
     </div>
     <div class="row">
         <div class="col s12 m6 l6">
-            <a id="cancelHostInput" class="waves-effect waves-light btn cancelBtn">Cancel</a>
+            <a id="cancelHostInput" class="waves-effect waves-light btn orange cancelBtn">Cancel</a>
         </div>
         <div class="col s12 m6 l6">
             {{#if $eq inputMode "edit"}}

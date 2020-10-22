@@ -18,12 +18,11 @@ Meteor.methods({
     //  Add URLs to Check
     //
     // ******************************************************************
-    'host.add' (url, timeBetweenChecks, emailIfDown, emailAddress, nmapScan) {
+    'host.add' (url, timeBetweenChecks, emailIfDown, emailAddress) {
         check(url, String);
         check(timeBetweenChecks, Number);
         check(emailIfDown, Boolean);
         check(emailAddress, String);
-        check(nmapScan, Boolean);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to add URLs to the system, make sure you are logged in.');
@@ -31,15 +30,11 @@ Meteor.methods({
 
         let now = new Date();
 
-        let nmapScanRecheck = moment(now).format('YYYY-MM-DD HH:mm:ss');
-
         return URLToCheck.insert({
             url: url,
             freqCheck: timeBetweenChecks,
             emailIfDown: emailIfDown,
             emailAddress: emailAddress,
-            nmapScan: nmapScan,
-            nmapScanRecheck: nmapScanRecheck,
             addedBy: Meteor.user().emails[0].address,
         });
     },
@@ -48,13 +43,13 @@ Meteor.methods({
     //  Edit URLs to check
     //
     // ******************************************************************
-    'host.edit' (urlId, url, timeBetweenChecks, emailIfDown, emailAddress, nmapScan) {
+    'host.edit' (urlId, url, timeBetweenChecks, emailIfDown, emailAddress) {
         check(urlId, String);
         check(url, String);
         check(timeBetweenChecks, Number);
         check(emailIfDown, Boolean);
         check(emailAddress, String);
-        check(nmapScan, Boolean);
+
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to edit URLs to the system, make sure you are logged in.');
@@ -62,16 +57,12 @@ Meteor.methods({
 
         let now = new Date();
 
-        let nmapScanRecheck = moment(now).format('YYYY-MM-DD HH:mm:ss');
-
         return URLToCheck.update({ _id: urlId }, {
             $set: {
                 url: url,
                 freqCheck: timeBetweenChecks,
                 emailIfDown: emailIfDown,
                 emailAddress: emailAddress,
-                nmapScan: nmapScan,
-                nmapScanRecheck: nmapScanRecheck,
                 updatedBy:  Meteor.user().emails[0].address,
             }
         });

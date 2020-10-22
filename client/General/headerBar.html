@@ -4,7 +4,7 @@
           <a href="#" class="brand-logo center">Host Up</a>
           <ul id="nav-mobile" class="left">
             {{#if currentUser}}
-            <li>{{> menuBtn}}</li>
+              <a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="fa fa-bars menuBtn"></i></a>
             {{else}}
             <li id="signIn" class="padMe myPointer">Sign In</li>
             {{/if}}
@@ -23,6 +23,28 @@
             {{> needConfig}}
           {{/if}}
       {{/if}}
-      {{> navMain}}
+
+      <ul id="slide-out" class="sidenav">
+        <li><div class="user-view">
+          <div class="background blue darken-4">
+          </div>
+          <a href="#email"><span class="white-text email">{{email}}</span></a>
+        </div></li>
+        {{#if currentUser}}
+            <li><div class="navBtn userDash" id="userDash"><i class="fa fa-cloud-download fa-fw navBtn importQuestions" aria-hidden="true"></i>&nbsp; Dashboard</div></li>
+            <li><div class="navBtn hostList" id="hostList"><i class="fa fa-cloud-download fa-fw navBtn importQuestions" aria-hidden="true"></i>&nbsp; Host List</div></li>
+            <li><div class="navBtn hostInput" id="hostInput"><i class="fa fa-question-circle fa-fw navBtn addQuestions" aria-hidden="true"></i>&nbsp; Host Input</div></li>
+    
+            {{#if isInRole 'Admin'}}
+                <li><div class="navBtn configSystem" id="configSystem"><i class="fa fa-gear fa-fw myNav configSystem" aria-hidden="true"></i>&nbsp; Configure System</div></li>
+                <li><div class="navBtn adminInfo" id="adminInfo"><i class="fa fa-gear fa-fw myNav adminInfo" aria-hidden="true"></i>&nbsp; Admin Data</div></li>
+            {{/if}}
+
+            <li><div class="signOut"><i class="fa fa-sign-out fa-fw myNav signOut" aria-hidden="true"></i>&nbsp; Sign-Out</div></li>
+
+        {{else}}
+            <li><div class="signIn"><i class="fa fa-sign-in fa-fw myNav signIn" aria-hidden="true"></i>&nbsp; Sign-In</div></li>
+        {{/if}}
+      </ul>
       {{> notificationList}}
 </template>

@@ -113,7 +113,7 @@ Template.hostList.events({
     },
     'click .getPingInfo' (event) {
         Session.set("myUrl", this.url);
-        Materialize.updateTextFields();
+        M.updateTextFields();
         let thisId = this._id;
 
         // console.log('This URL is: ' + this.url);

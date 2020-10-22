@@ -6,9 +6,10 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
-    "bcrypt": "^2.0.1",
+    "bcrypt": "^5.0.0",
     "highcharts": "^6.2.0",
     "highcharts-more": "^0.1.7",
+    "materialize-css": "^1.0.0",
     "meteor-node-stubs": "^0.3.2",
     "shelljs": "^0.8.4"
   }

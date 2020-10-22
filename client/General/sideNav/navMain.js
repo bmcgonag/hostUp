@@ -1,3 +1,7 @@
+Template.navMain.onRendered(function() {
+    $('.sidenav').sidenav();
+});
+
 Template.navMain.events({
     'click  .navBtn' (event) {
         event.preventDefault();

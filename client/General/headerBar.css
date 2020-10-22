@@ -6,3 +6,7 @@
 i.icon-red {
     color: red;
 }
+
+.navBtn {
+	cursor: pointer;
+}

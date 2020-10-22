@@ -54,11 +54,15 @@ Template.hostInputForm.events({
     'click #submitURL' (event) {
         event.preventDefault();
 
+        console.log("Clicked!");
+
         let url = $("#urlToCheck").val();
         let emailIsDown = $('#emailIfDown').prop('checked')
         let emailAddress = $("#emailAddress").val();
         let nmapScan = $("#nmapScan").prop('checked');
         let often = 20;
+
+        console.log("emailIsDown: " + emailIsDown);
 
         if (url == "" || url == null) {
             showSnackbar("URL is Required!", "red");
@@ -75,22 +79,27 @@ Template.hostInputForm.events({
         // console.log(url.slice(0,7));
         if (url.slice(0,8) == "https://") {
             urlValid = true;
-        } else if (url.slice(0,7) == "http://") {
+    } else if (url.slice(0,7) == "http://") {
             urlValid = true;
         } else {
             urlValid = false;
         }
 
         if (urlValid == true) {
-            Meteor.call("host.add", url, often, emailIsDown, emailAddress, nmapScan, function(err, result) {
-                if (err) {
-                    console.log("Error adding host url: " + err);
-                    showSnackbar("Error Adding Host!", "red");
-                } else {
-                    showSnackbar("Host Added Successfully!", "green");
-                    Meteor.call("hosts.call", result, url, often);
-                }
-            });
+            if (emailIsDown != true && emailIsDown != false) {
+                console.log("weird value you for emailisDown: " + emailIsDown);
+            } else {
+                Meteor.call("host.add", url, often, emailIsDown, emailAddress, nmapScan, function(err, result) {
+                    if (err) {
+                        console.log("Error adding host url: " + err);
+                        showSnackbar("Error Adding Host!", "red");
+                    } else {
+                        showSnackbar("Host Added Successfully!", "green");
+                     Meteor.call("hosts.call", result, url, often);
+                    }
+                });
+            }
+            
         } else {
             showSnackbar("URL is Invalid - Please enter a URL with http:// or https://", "red");
             return;
